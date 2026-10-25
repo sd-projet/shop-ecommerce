@@ -4,8 +4,9 @@ Plateforme e-commerce full-stack : catalogue avec recherche et filtres, panier, 
 espace client et back-office administrateur. Le backend suit une **Clean Architecture (hexagonale)** stricte,
 vérifiée automatiquement par des tests d'architecture.
 
-**Démo en ligne** : `https://shop-ecommerce-frontend-six.vercel.app/`
-**API** : https://shop-ecommerce-backend.onrender.com/api/products
+**Démo en ligne** : https://shop-ecommerce-frontend-six.vercel.app/
+
+**API** : `https://shop-ecommerce-backend.onrender.com/api/products`
 
 > Le backend est hébergé sur l'offre gratuite de Render : après une période d'inactivité, la première requête peut
 > prendre 30 à 60 secondes (réveil du serveur). Les suivantes sont instantanées.
