@@ -18,9 +18,8 @@ vérifiée automatiquement par des tests d'architecture.
 | Administrateur | `admin@shop.com` | `Admin123!` |
 | Client | créez-en un via *Inscription* | — |
 
-Le paiement de la démo est **simulé** : aucune carte n'est demandée et aucun débit n'est effectué. L'intégration
-Stripe (PaymentIntent, webhook signé, Stripe Elements) est incluse dans le code et s'active avec des clés de test
-(voir [Paiement](#paiement)).
+Le paiement fonctionne en **mode test Stripe** : aucun argent réel n'est débité. Utilisez la carte
+`4242 4242 4242 4242`, une date d'expiration future et n'importe quel CVC.
 
 ## Fonctionnalités
 
@@ -41,7 +40,7 @@ Stripe (PaymentIntent, webhook signé, Stripe Elements) est incluse dans le code
 | Base de données | PostgreSQL (Neon), migrations Flyway |
 | Tests | JUnit 5, Mockito, AssertJ, ArchUnit, Testcontainers |
 | Frontend | Next.js (App Router, TypeScript), Tailwind CSS, TanStack React Query, Zustand |
-| Paiement | Stripe API (mode test) ou passerelle simulée |
+| Paiement | Stripe API (PaymentIntent, webhook signé, Stripe Elements) en mode test, ou passerelle simulée en local |
 | DevOps | Docker, Docker Compose, Render (backend), Vercel (frontend) |
 
 ## Architecture backend
@@ -120,8 +119,9 @@ mvn verify    # ajoute les tests d'intégration *IT (Testcontainers, Docker requ
 
 ## Paiement
 
-- **Par défaut** : passerelle simulée (`PAYMENT_PROVIDER=fake`), aucune clé requise.
-- **Stripe, mode test** : mettre `PAYMENT_PROVIDER=stripe`, renseigner `STRIPE_SECRET_KEY` et `STRIPE_WEBHOOK_SECRET`
+- **En ligne** : Stripe en mode test (`PAYMENT_PROVIDER=stripe`), avec webhook signé sur `/api/payments/webhook`.
+- **En local, par défaut** : passerelle simulée (`PAYMENT_PROVIDER=fake`), aucune clé requise.
+- **Stripe en local** : mettre `PAYMENT_PROVIDER=stripe`, renseigner `STRIPE_SECRET_KEY` et `STRIPE_WEBHOOK_SECRET`
   côté backend, et `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` côté frontend. Carte de test : `4242 4242 4242 4242`.
   Webhook en local : `stripe listen --forward-to localhost:8080/api/payments/webhook`.
 
@@ -129,8 +129,8 @@ mvn verify    # ajoute les tests d'intégration *IT (Testcontainers, Docker requ
 
 - **Base** : [Neon](https://neon.tech) (PostgreSQL serverless).
 - **Backend** : Render, *Web Service* en Docker (Root Directory `backend`), variables `DB_URL`, `DB_USER`, `DB_PASSWORD`,
-  `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`. Un fichier `render.yaml` équivalent est fourni.
-- **Frontend** : Vercel (Root Directory `frontend`), variable `NEXT_PUBLIC_API_URL` pointant vers l'API Render.
+  `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `PAYMENT_PROVIDER=stripe`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`. Un fichier `render.yaml` équivalent est fourni.
+- **Frontend** : Vercel (Root Directory `frontend`), variables `NEXT_PUBLIC_API_URL` (API Render) et `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`.
 
 ## API (extrait)
 
@@ -149,5 +149,5 @@ mvn verify    # ajoute les tests d'intégration *IT (Testcontainers, Docker requ
 
 ## Pistes d'amélioration
 
-Paiement Stripe activé en production, refresh tokens, upload d'images (S3/MinIO), recherche plein texte PostgreSQL
+Paiement Stripe en mode réel, refresh tokens, upload d'images (S3/MinIO), recherche plein texte PostgreSQL
 (`tsvector`), file de messages pour les e-mails, métriques Prometheus, intégration continue avec GitHub Actions.
