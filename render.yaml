@@ -1,0 +1,27 @@
+# Blueprint Render : déploie le backend Spring Boot (Docker). Le frontend va sur Vercel, la base sur Neon.
+services:
+  - type: web
+    name: shop-backend
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS          # plan gratuit = 512 Mo de RAM
+        value: -Xmx350m -XX:+UseSerialGC
+      - key: DB_URL                     # jdbc:postgresql://<hôte-neon>/<base>?sslmode=require
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_POOL_SIZE
+        value: "5"
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS       # URL Vercel du frontend, sans "/" final
+        sync: false
+      - key: PAYMENT_PROVIDER           # paiement simulé (démo portfolio)
+        value: fake
+      - key: MAIL_MODE
+        value: log
