@@ -6,10 +6,18 @@ vérifiée automatiquement par des tests d'architecture.
 
 **Démo en ligne** : https://shop-ecommerce-frontend-six.vercel.app/
 
-**API** : `https://shop-ecommerce-backend.onrender.com/api/products`
+**API à lancer au préalable** : `https://shop-ecommerce-backend.onrender.com/api/products`
 
 > Le backend est hébergé sur l'offre gratuite de Render : après une période d'inactivité, la première requête peut
 > prendre 30 à 60 secondes (réveil du serveur). Les suivantes sont instantanées.
+
+![alt text](image.png)
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+![alt text](image-3.png)
 
 ## Comptes de démonstration
 
